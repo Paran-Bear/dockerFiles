@@ -1,0 +1,19 @@
+FROM mariadb:10.8.2
+
+ENV MYSQL_ROOT_PASSWORD catch!23
+
+WORKDIR /etc/mysql
+
+RUN mkdir initDB
+
+WORKDIR /etc/mysql/initDB
+
+COPY ./init.sql /etc/mysql/initDB/init.sql
+
+
+RUN echo lower_case_table_names = 1 >> /etc/mysql/my.cnf
+RUN echo default-time-zone = '+9:00' >> /etc/mysql/my.cnf
+RUN echo collation-server = utf8mb4_unicode_ci >> /etc/mysql/my.cnf
+RUN echo collation-server = utf8mb4_general_ci >> /etc/mysql/my.cnf
+RUN echo character-set-server = utf8mb4 >> /etc/mysql/my.cnf
+RUN echo skip-character-set-client-handshake >> /etc/mysql/my.cnf

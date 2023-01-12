@@ -1,0 +1,25 @@
+version: '3'
+services:
+  maria-db:
+    container_name: maria-db
+#    docker 실행시 자동 실행.
+    restart: always
+#    도커 파일로 빌드
+    build:
+      context: .
+      dockerfile: ./dockerfile
+      args:
+        buildno: 1.0
+
+#     볼륨 개인 설정
+    volumes:
+#     도커 볼륨
+      - maria_volume:/var/lib/mysql
+
+#    로컬 디렉토리
+#      - ./data:/var/lib/mysql
+
+    ports:
+      - "3306:3306"
+volumes:
+  maria_volume:
