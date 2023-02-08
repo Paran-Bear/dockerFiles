@@ -20,6 +20,9 @@ services:
       - 9200:9200
     networks:
       - elastic
+
+
+
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: es02
@@ -38,6 +41,7 @@ services:
       - data02:/usr/share/elasticsearch/data
     networks:
       - elastic
+
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: es03
@@ -56,6 +60,7 @@ services:
       - data03:/usr/share/elasticsearch/data
     networks:
       - elastic
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.16.1
     container_name: kibana
