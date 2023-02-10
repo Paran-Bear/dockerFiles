@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<dataConfig>
+
+<dataSource name="metafile_ds" type="FileDataSource"  basePath="/home/csipc/local/DATA/OLE_F01/faq.log" encoding="utf-8"/>
+
+<document>
+	<entity name="a" processor="MetaCSVEntityProcessor" datasource="metafile_ds" url="${metafile_ds.fileAbsolutePath}" onError="abort" transformer="HTMLStripTransformer" >
+		<field column="DOCID" name="DOCID" />
+		<field column="OSTPYE" name="TYPE" />  
+		<field column="PARENT_CATEGORY_NAME" name="PARENT_CATEGORY_NAME" />         
+		<field column="CATEGORY_NAME" name="CATEGORY_NAME" />            
+		<field column="QUESTION_BODY" name="QUESTION_BODY" />         
+		<field column="ANSWER_BODY" name="ANSWER_BODY" stripHTML="true" />        
+		<field column="FREQUENCY" name="FREQUENCY" />        
+		<field column="REGDATE" name="REGDATE" />     
+		<field column="WEB_SVC_URL" name="WEB_SVC_URL" /> 
+		<field column="MOBILE_SVC_URL" name="MOBILE_SVC_URL" /> 
+
+	</entity>
+</document>
+</dataConfig>

@@ -1,0 +1,20 @@
+#### 검색어 수정을 위한 동의어 사전 ####
+# 한글 동의어 사전 구축 가이드
+# - 기본적으로 한글 단일 형태소를 동의어로 등록한다.(복합명사 등록 불가)
+# - 띄어쓰기, "-"(하이픈)과 같은 분리되는 형태 복합어 등록 불가
+# - 동의어 사전 등록전 형태소 사전에 존재하는지 확인 필요(즉, 단일 형태소임을 확인)
+
+6splus=>6s plus
+galaxynote=>galaxy note
+iphone6splus=>iphone6s plus
+a s=>as
+ipadpro=>ipad pro
+인뭉올=>인터넷 뭉치면 올레
+gigauhd=>giga uhd
+gigauhdtv=>giga uhd tv
+gigaiot=>giga iot
+gigatv=>giga tv
+uhdtv=>uhd tv
+ollehtv=>olleh tv
+applewatch=>apple watch
+인터넷=>인터넷

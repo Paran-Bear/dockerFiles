@@ -1,0 +1,25 @@
+{
+  "initArgs":{},
+  "initializedOn":"2018-12-24T03:08:46.970Z",
+  "managedList":[{
+      "name":"discoveryModel",
+      "class":"org.apache.solr.ltr.model.LinearModel",
+      "store":"myEfiFeatureStore",
+      "features":[
+        {
+          "name":"nlc1",
+          "norm":{"class":"org.apache.solr.ltr.norm.IdentityNormalizer"}},
+        {
+          "name":"nlc2",
+          "norm":{"class":"org.apache.solr.ltr.norm.IdentityNormalizer"}},
+        {
+          "name":"nlc3",
+          "norm":{"class":"org.apache.solr.ltr.norm.IdentityNormalizer"}},
+        {
+          "name":"originalScore",
+          "norm":{"class":"org.apache.solr.ltr.norm.IdentityNormalizer"}}],
+      "params":{"weights":{
+          "nlc1":1.0,
+          "nlc2":1.0,
+          "nlc3":1.0,
+          "originalScore":0.0}}}]}

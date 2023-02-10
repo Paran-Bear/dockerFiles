@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+   <!--
+    ##   aibot 표준 스키마(schema)  
+         서비스를 위한 별도 필드 추가는 커스터마이징 가능   
+    -->
+<schema name="aibot" version="1.6">
+
+   <field name="DOCID" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+   <field name="PARENT_CATEGORY_NAME" type="string" indexed="true" stored="true" />
+   <field name="CATEGORY_NAME" type="string" indexed="true" stored="true" termVectors="true" />
+
+   <field name="INTENT" type="string" indexed="true" stored="true" termVectors="true" />
+   <field name="INTENT_TYPE" type="string" indexed="false" stored="true"/>
+   <field name="INTENT_ID" type="string" indexed="false" stored="true"/>
+
+   <field name="TYPE" type="string" indexed="true" stored="true" />
+   <!-- 학습용 Question 필드   --> 
+   <field name="QUESTION_BODY" type="text_ko" indexed="true" stored="true" termVectors="true" />
+   <!-- 학습용 Question 필드에서 3가지 type의 특징 추출 방식으로 확대를 위한 필드   --> 
+   <field name="QUESTION_BODY_MLT1" type="text_ko_ft1" indexed="true" stored="true" termVectors="true" />
+   <field name="QUESTION_BODY_MLT2" type="text_ko_ft2" indexed="true" stored="true" termVectors="true" />
+   <field name="QUESTION_BODY_MLT3" type="text_ko_ft3" indexed="true" stored="true" termVectors="true" />
+   <field name="QUESTION_BODY_STRING" type="string" indexed="true" stored="true" termVectors="true" />
+   <field name="QUESTION_BODY_JASO" type="text_kr_jaso" indexed="true" stored="true" termVectors="true" />
+   <field name="IS_DEL" type="boolean" indexed="true" stored="true" default="false"/>
+   <field name="EXCLUDE_SEARCH" type="boolean" indexed="true" stored="true" default="false"/>
+
+   <field name="ANSWER_BODY" type="text_keywords" indexed="true" stored="true"/>
+   <field name="TITLE" type="string" indexed="false" stored="true"/>
+   <field name="FREQUENCY" type="pint" indexed="true" stored="true" />
+   <field name="REGDATE" type="pdate" indexed="true" stored="true" />
+   <field name="WEB_SVC_URL" type="string" indexed="true" stored="true" />
+   <field name="MOBILE_SVC_URL" type="string" indexed="true" stored="true" />
+
+   <field name="CREATED" type="date_range" indexed="true" stored="true" multiValued="true"/>
+   <field name="INTENT_SCORE" type="tfloat" indexed="true" stored="true"/>
+   <field name="REPLY_SCORE" type="tfloat" indexed="true" stored="true"/>
+
+   <!-- 개체명 처리를 위한 필드  -->
+   <field name="NAME" type="text_ko" indexed="true" stored="true" termVectors="true" />
+   <field name="NAME_TAG" type="tag" indexed="true" stored="false" termVectors="true" />
+   <field name="NE_TYPE" type="string" stored="true" termVectors="true" />
+   <field name="NE_CODE" type="string" stored="true" termVectors="true" />
+
+   <!-- Default Fields   -->
+   <field name="_version_" type="plong" indexed="true" stored="true"/>
+   <field name="_root_" type="string" indexed="true" stored="false"/>
+	   <!-- catch all field   -->
+   <field name="_text_" type="text_ko" indexed="true" stored="false"  multiValued="true" omitNorms="true" /> 
+   
+   <!-- 컨펌 의도 타입  -->
+   <field name="CONFIRM_TYPE" type="string" indexed="false" stored="true"/>
+
+
+   <!--  ####  서비스별 field 정의 영역 시작 ### --> 
+   
+   <!--
+    ## key =  id   
+	## Note:  schema의 컬럼 이름은 모두 대문자로 선언 권장. 
+   <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" /> 
+   -->
+   
+   
+   <!-- <copyField source="QUESTION_BODY" dest="QUESTION_BODY_JASO"/> -->
+   <copyField source="QUESTION_BODY" dest="QUESTION_BODY_MLT1"/>
+   <copyField source="QUESTION_BODY" dest="QUESTION_BODY_MLT2"/>
+   <copyField source="QUESTION_BODY" dest="QUESTION_BODY_MLT3"/>
+   <copyField source="QUESTION_BODY" dest="QUESTION_BODY_STRING"/>
+   <copyField source="NAME" dest="NAME_TAG"/>
+   
+   
+   <!-- uniqueKey   -->
+   <uniqueKey>DOCID</uniqueKey>
+
+
+   <!--  ####  서비스별 field 정의 영역 끝  ###  -->
+   
+  
+  <!-- Dynamic field definitions allow using convention over configuration
+       for fields via the specification of patterns to match field names.
+       EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)
+       RESTRICTION: the glob-like pattern in the name attribute must have a "*" only at the start or the end.  -->
+   
+    <dynamicField name="*_i"  type="pint"    indexed="true"  stored="true"/>
+    <dynamicField name="*_is" type="pints"    indexed="true"  stored="true"/>
+    <dynamicField name="*_s"  type="string"  indexed="true"  stored="true" />
+    <dynamicField name="*_ss" type="strings"  indexed="true"  stored="true"/>
+    <dynamicField name="*_l"  type="plong"   indexed="true"  stored="true"/>
+    <dynamicField name="*_ls" type="plongs"   indexed="true"  stored="true"/>
+    <dynamicField name="*_t" type="text_general" indexed="true" stored="true" multiValued="false"/>
+    <dynamicField name="*_txt" type="text_general" indexed="true" stored="true"/>
+    <dynamicField name="*_b"  type="boolean" indexed="true" stored="true"/>
+    <dynamicField name="*_bs" type="booleans" indexed="true" stored="true"/>
+    <dynamicField name="*_f"  type="pfloat"  indexed="true"  stored="true"/>
+    <dynamicField name="*_fs" type="pfloats"  indexed="true"  stored="true"/>
+    <dynamicField name="*_d"  type="pdouble" indexed="true"  stored="true"/>
+    <dynamicField name="*_ds" type="pdoubles" indexed="true"  stored="true"/>
+    <dynamicField name="random_*" type="random"/>
+
+    <!-- Type used for data-driven schema, to add a string copy for each text field -->
+    <dynamicField name="*_str" type="strings" stored="false" docValues="true" indexed="false" useDocValuesAsStored="false"/>
+
+    <dynamicField name="*_dt"  type="pdate"    indexed="true"  stored="true"/>
+    <dynamicField name="*_dts" type="pdate"    indexed="true"  stored="true" multiValued="true"/>
+    <dynamicField name="*_p"  type="location" indexed="true" stored="true"/>
+    <dynamicField name="*_srpt"  type="location_rpt" indexed="true" stored="true"/>
+    
+    <!-- payloaded dynamic fields -->
+    <dynamicField name="*_dpf" type="delimited_payloads_float" indexed="true"  stored="true"/>
+    <dynamicField name="*_dpi" type="delimited_payloads_int" indexed="true"  stored="true"/>
+    <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true"  stored="true"/>
+
+    <dynamicField name="attr_*" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
+      
+
+   <!-- Field Types   --> 
+
+   <!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
+    <fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
+
+    <!-- boolean type: "true" or "false" -->
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+    <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+
+    <!--
+      Numeric field types that index values using KD-trees.
+      Point fields don't support FieldCache, so they must have docValues="true" if needed for sorting, faceting, functions, etc.
+    -->
+    <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+    <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+    <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+    <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
+    
+    <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+    <fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+    <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+    <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
+    <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
+
+  <!-- some trie-coded dynamic fields for faster range queries -->
+  <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
+  <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
+  <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
+  <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
+  <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+
+  <fieldType name="tint" class="solr.TrieIntField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tlong" class="solr.TrieLongField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tfloat" class="solr.TrieFloatField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6" positionIncrementGap="0"/>
+
+    <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
+         is a more restricted form of the canonical representation of dateTime
+         http://www.w3.org/TR/xmlschema-2/#dateTime    
+         The trailing "Z" designates UTC time and is mandatory.
+         Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
+         All other components are mandatory.
+
+         Expressions can also be used to denote calculations that should be
+         performed relative to "NOW" to determine the value, ie...
+
+               NOW/HOUR
+                  ... Round to the start of the current hour
+               NOW-1DAY
+                  ... Exactly 1 day prior to now
+               NOW/DAY+6MONTHS+3DAYS
+                  ... 6 months and 3 days in the future from the start of
+                      the current day
+                      
+      -->
+    <!-- KD-tree versions of date fields -->
+    <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+    <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+    
+    <!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
+    <fieldType name="binary" class="solr.BinaryField"/>
+    <!-- log 데이터에 대한 동적 id 생성용 type   -->
+    <fieldType name="uuid" class="solr.UUIDField" />
+
+    <fieldType name="date_range" class="solr.DateRangeField"/>
+
+    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
+
+    <!-- A specialized field for geospatial search filters and distance sorting. -->
+    <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
+
+    <!-- A geospatial field type that supports multiValued and polygon shapes.
+      For more information about this and other spatial fields see:
+      http://lucene.apache.org/solr/guide/spatial-search.html
+    -->
+    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
+               geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
+
+    <!-- Payloaded field types -->
+    <fieldType name="delimited_payloads_float" stored="false" indexed="true" class="solr.TextField">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="float"/>
+      </analyzer>
+    </fieldType>
+    <fieldType name="delimited_payloads_int" stored="false" indexed="true" class="solr.TextField">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="integer"/>
+      </analyzer>
+    </fieldType>
+    <fieldType name="delimited_payloads_string" stored="false" indexed="true" class="solr.TextField">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="identity"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- 
+	     Text analysis type 
+     -->
+
+    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      </analyzer>
+    </fieldType>
+
+
+    <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords.txt" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords.txt" />
+        <filter class="solr.SynonymGraphFilterFactory" synonyms="lang/synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    
+  <!-- Text Keyword Field Type (text normalization)-->
+   <fieldType name="text_keywords" class="solr.TextField" positionIncrementGap="100">
+   	<analyzer>
+   		<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="[^ㄱ-ㅎ가-힣a-zA-Z0-9,]+" replacement=""/>
+   		<tokenizer class="solr.StandardTokenizerFactory"/>
+   		<filter class="solr.LowerCaseFilterFactory"/>
+  	</analyzer>
+   </fieldType>
+   
+   
+   <!-- 한글에 대한 형태소 분석 결과 위주로 보기 위한 설정   -->
+   <fieldType name="text_ko_morph" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                   decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" tags="NA" /> <!-- E, IC, J,  MAJ, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV,VCP"/> -->
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+    
+      </analyzer>
+    </fieldType>
+   
+    <!-- 한글형태소 분석결과 + (동의어,오타정정, 불용어 처리 등) 결과 보기 위한 설정  -->
+    <fieldType name="text_ko" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                   decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" tags="NA" /> <!-- E, IC, J,  MAJ, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV,VCP"/> -->
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>
+      </analyzer>
+    </fieldType>
+
+     <!-- 전처리 설정 
+        o 오타정정/띄어쓰기 보정, 동의어(형태소 분석 전단계 term) 치환, 불용어 필터   --> 
+   <fieldType name="text_ko_preprocessor" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>
+      </analyzer>
+    </fieldType>
+
+
+    <!-- feature extraction -1  -->
+    <fieldType name="text_ko_ft1" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                  decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" 
+                tags="E,NNB, J,MAJ, MM,SP, SSC, SSO, SC, SE, XSA, XSV, UNA, NA, VSV"/>
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <!-- 오타 정정은 형태소 분석 이전 단계에서만 처리 @see text_ko_preprocessor -->
+	<!--
+	             <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+	-->
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>
+      </analyzer>
+    </fieldType>
+   
+   <!-- feature extraction -2  -->
+   <fieldType name="text_ko_ft2" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                  decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" 
+                tags="E,NNB,J,MAJ, MM,SP, SSC, SSO, SC, SE, XSA, XSV, UNA, NA, VSV"/>
+        <!-- 제거된(filtering) term은 empty token형태로서 empty token을 완전히 제거 -->
+        <!-- <filter class="org.apache.lucene.analysis.ko.FlattenEmptyTokenFilterFactory" /> -->
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <!-- 오타 정정은 형태소 분석 이전 단계에서만 처리 @see text_ko_preprocessor -->
+	<!--
+	             <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+	-->
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.FlattenGraphFilterFactory"/> 
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>  
+        <filter class="solr.ShingleFilterFactory" outputUnigrams="false"/>
+      </analyzer>
+    </fieldType>
+   
+   <!-- feature extraction -3  -->
+   <fieldType name="text_ko_ft3" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                   decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" 
+                tags="E,NNB, J, MAJ, MM,SP, SSC, SSO, SC, SE, XSA,XSV, UNA, NA, VCN,VSV,VCP,VV"/>
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <!-- 오타 정정은 형태소 분석 이전 단계에서만 처리 @see text_ko_preprocessor -->
+	<!--
+	             <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+	-->
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>
+      </analyzer>
+    </fieldType>
+  
+  
+  
+  <!-- 개체명 추출을 위한 Fieldtype   --> 
+   <fieldtype name="tag" class="solr.TextField" postingsFormat="FST50" omitTermFreqAndPositions="true" omitNorms="true">    
+    <analyzer type="index">
+      <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                   decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+          == 명사(복합명사 포함)유형 이외 품사는 필터링 한다. 
+          NNG(일반 명사), NNP(고유 명사), NNB(의존 명사),NNBC(단위를 나타내는 의존명사), NR(수사)
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" 
+                tags="VCP,VCN,MM,MAG,MAJ,IC,JKS,JKC,JKG,JKO,JKB,JKV,JKQ,JX,JC,EP,EF,EC,ETN,ETM,XPN,XSN,XSV,XSA,XR,SF,SE,SSO,SSC,SC,SY"/>
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>
+      <filter class="solr.ConcatenateGraphFilterFactory" preservePositionIncrements="false"/>
+    </analyzer>
+    <analyzer type="query">
+      <!-- 문장의 끝 부분을 정규화. 문장부호(ex. ?,! 등)가 있거나 없거나 형태소 분석 결과가 동일하게 유지됨 -->
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="($)" replacement=" "/>
+        <!-- 
+            * userDictionary: 사용자 사전 경로(path)
+            * userDictionaryEncoding: 사용자 사전 파일 encoding.
+            * decompoundMode: 복합명사 분해 방식(Decompound mode)  'none', 'discard', 'mixed'. Default : 'discard'.
+            * outputUnknownUnigrams: true일때, 미등록/미확인 단어에 대해 unigram을 생성/출력 
+        -->
+        <tokenizer class="org.apache.lucene.analysis.ko.KoreanTokenizerFactory" 
+                   decompoundMode="discard" outputUnknownUnigrams="false" userDictionary="lang/userdict_ko.txt"/>
+        <!-- 동사/형용사 '어미'(Pos.E) 같은 품사의 term에 대해서 제거 함, parameter 'tags' 에 제거할 품사 정보를 지정함,
+          default tags(remove) : 
+          E, IC, J, MAG, MAJ, MM, SP, SSC, SSO, SC, SE, XPN, XSA, XSN, XSV, UNA, NA, VSV
+          == 명사(복합명사 포함)유형 이외 품사는 필터링 한다.  
+          NNG(일반 명사), NNP(고유 명사), NNB(의존 명사),NNBC(단위를 나타내는 의존명사), NR(수사)
+        -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanPartOfSpeechStopFilterFactory" 
+                tags="VCP,VCN,MM,MAG,MAJ,IC,JKS,JKC,JKG,JKO,JKB,JKV,JKQ,JX,JC,EP,EF,EC,ETN,ETM,XPN,XSN,XSV,XSA,XR,SF,SE,SSO,SSC,SC,SY"/>
+        <!-- 한자에 대해서 한글로 치환. -->
+        <filter class="org.apache.lucene.analysis.ko.KoreanReadingFormFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms_correction.txt" ignoreCase="true" expand="false"/>
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory"
+              synonyms="lang/synonyms.txt" expand="false" ignoreCase="true" />
+        <filter class="solr.FlattenGraphFilterFactory"/>
+        <filter class="solr.StopFilterFactory" words="lang/stopwords.txt"/>
+    </analyzer>
+  </fieldtype>
+
+  
+
+   <!-- 자동완성용 한글 자소 분리용 설정  -->
+  <fieldType name="text_kr_jaso" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+	  <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+	  <filter class="org.apache.lucene.analysis.ko.jaso.KoreanJasoFilterFactory" type="kor" />
+	  <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="50" /> 
+	  <filter class="solr.LowerCaseFilterFactory"/>
+	</analyzer>
+	<analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="org.apache.lucene.analysis.ko.jaso.KoreanJasoFilterFactory" type="kor" />
+	  <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+
+ <!-- kt STT 띄어쓰기 보정을 위한 사용자 입력 질문 전처리, 공백을 제거함. -->
+  <fieldType name="tag_trim_preprocessor" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="(\s+)" replacement=""/>
+	<tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      </analyzer>
+  </fieldType>
+
+
+  <similarity class="org.apache.lucene.search.similarities.ClassicSimilarity"/>
+  
+	
+</schema>

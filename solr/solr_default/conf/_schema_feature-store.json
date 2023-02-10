@@ -1,0 +1,24 @@
+{
+  "initArgs":{},
+  "initializedOn":"2018-12-24T03:06:04.665Z",
+  "managedList":[
+    {
+      "name":"nlc1",
+      "class":"org.apache.solr.ltr.feature.SolrFeature",
+      "params":{"q":"{!edismax qf=QUESTION_BODY_MLT_1}${qq}"},
+      "store":"myEfiFeatureStore"},
+    {
+      "name":"nlc2",
+      "class":"org.apache.solr.ltr.feature.SolrFeature",
+      "params":{"q":"{!edismax qf=QUESTION_BODY_MLT_2}${qq}"},
+      "store":"myEfiFeatureStore"},
+    {
+      "name":"nlc3",
+      "class":"org.apache.solr.ltr.feature.SolrFeature",
+      "params":{"q":"{!edismax qf=QUESTION_BODY_MLT_3}${qq}"},
+      "store":"myEfiFeatureStore"},
+    {
+      "name":"originalScore",
+      "class":"org.apache.solr.ltr.feature.OriginalScoreFeature",
+      "params":null,
+      "store":"myEfiFeatureStore"}]}

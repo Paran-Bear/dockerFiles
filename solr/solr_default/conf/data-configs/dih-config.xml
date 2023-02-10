@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<dataConfig>
+
+    <dataSource
+       type="JdbcDataSource"
+       driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+       url="jdbc:sqlserver://10.217.41.57:1433;databaseName=erms;"
+       user="${erms_db_id}" password="${erms_db_pw}" />
+
+<document>
+	<entity name="ERMS" query="SELECT DOCID, TYPE, PARENT_CATEGORY_NAME, CATEGORY_NAME, QUESTION_BODY, ANSWER_BODY, FREQUENCY, REGDATE, WEB_SVC_URL, MOBILE_SVC_URL FROM CUST_FAQ" transformer="HTMLStripTransformer,DateFormatTransformer"> 
+		<field column="DOCID" name="DOCID" />
+		<field column="OSTPYE" name="TYPE" />  
+		<field column="PARENT_CATEGORY_NAME" name="PARENT_CATEGORY_NAME" />         
+		<field column="CATEGORY_NAME" name="CATEGORY_NAME" />            
+		<field column="QUESTION_BODY" name="QUESTION_BODY" />         
+		<field column="ANSWER_BODY" name="ANSWER_BODY" stripHTML="true" />        
+		<field column="FREQUENCY" name="FREQUENCY" />        
+		<field column="REGDATE" name="REGDATE"  dateTimeFormat="yyyyMMddhhmmss" locale="en"/>   
+		<field column="WEB_SVC_URL" name="WEB_SVC_URL" /> 
+		<field column="MOBILE_SVC_URL" name="MOBILE_SVC_URL" /> 
+	</entity>
+</document>
+</dataConfig>
