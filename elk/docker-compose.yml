@@ -70,6 +70,7 @@ services:
       - "LS_JAVA_OPTS= -Xmx256m -Xms256m"
     volumes:
       - logstash01:/usr/share/logstash/data
+        # change your log directory
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - /mnt/c/Users/znrdl/logs:/logs
     ports:
